@@ -15,6 +15,7 @@ return new class extends Migration
             $table->integer('published_year');
             $table->timestamps();
         });
+
     }
 
     /**
