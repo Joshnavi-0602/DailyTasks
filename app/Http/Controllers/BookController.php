@@ -15,13 +15,13 @@ class BookController extends Controller
 
    // Fetch book by ID and return JSON
     public function show($id){
-        $book = Book::find($id);
+        $books = Book::find($id);
 
-        if(!$book){
+        if(!$books){
             return response()->json(['Message' => 'Book not found'],404);
         }
 
-        return response()->json($book);
+        return response()->json($books);
     }
 
    
@@ -29,20 +29,46 @@ class BookController extends Controller
 
     public function details($id)
     {
-        $book = Book::find($id);
+        $books = Book::find($id);
 
-        if(!$book){
+        if(!$books){
             return "Book not found";
         }
-        return $book->description;
+        return $books->description;
     } 
 
-// Fetch all books and show in Blade view
+    // Fetch all books and show in Blade view
     public function listView()
     {
         $books = Book::all(); // Fetch all books
         return view('books.index', ['books' => $books]);
 
     }
+
+
+    public function create() 
+    {
+        return view('books.create');
+    }
+
+    public function store(Request $request) 
+    {
+        //Book::create($request->all());
+        //return redirect()->route('books.create')->with('success', 'Book added!');
+
+        $book = new Book();
+        $book->title = $request->title;
+        $book->author = $request->author;
+        $book->published_year = $request->published_year;
+        $book->description = $request->description ?? 'No description';
+
+        $book->save();
+
+        return redirect('/books/view');
+    }
+
+
+
+
 }
 
