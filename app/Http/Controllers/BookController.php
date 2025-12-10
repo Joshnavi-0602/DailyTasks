@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Models\Author;
 
 class BookController extends Controller
 {
@@ -21,7 +23,8 @@ class BookController extends Controller
             return response()->json(['Message' => 'Book not found'],404);
         }
 
-        return response()->json($books);
+        //return response()->json($books);
+        return response($books);
     }
 
    
@@ -34,7 +37,9 @@ class BookController extends Controller
         if(!$books){
             return "Book not found";
         }
-        return $books->description;
+        //return response()->json($books->description);
+        //return response()->json([ 'description' => $book->description ]);
+        return $books->description; // Not in JSON format('Plain text')
     } 
 
     // Fetch all books and show in Blade view
@@ -46,11 +51,13 @@ class BookController extends Controller
     }
 
 
+    // Create form to store data
     public function create() 
     {
         return view('books.create');
     }
 
+    // Store-insert into DB & Fetch the added + existing data
     public function store(Request $request) 
     {
         //Book::create($request->all());
@@ -67,7 +74,31 @@ class BookController extends Controller
         return redirect('/books/view');
     }
 
+    // Edit the data by ID
+    public function edit($id)
+    {
+    $book = Book::find($id);
 
+    return view('books.edit', compact('book'));
+    }
+
+    // Updating the data
+    public function update(Request $request, $id)
+    {
+
+    $book = Book::find($id);
+
+    $book->update([
+        'title' => $request->title,
+        'author' => $request->author,
+        'published_year' => $request->published_year,
+        'description' => $request->description,
+    ]);
+
+    return redirect('/books/view');
+    //return redirect()->route('books.view');
+
+    }
 
 
 }
