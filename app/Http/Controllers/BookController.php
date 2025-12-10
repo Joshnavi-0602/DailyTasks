@@ -100,6 +100,15 @@ class BookController extends Controller
 
     }
 
+    //Delete the data
+    public function destroy($id)
+    {
+        $book = Book::findOrFail($id); // Find book by ID
+        $book->delete(); // Delete from database
+
+        return redirect('/books/view')->with('success', 'Book deleted successfully!');
+    }
+
 
 }
 
